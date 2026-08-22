@@ -87,4 +87,26 @@ export default class UserService {
       token,
     };
   }
+
+  public async getUserInfoById(id: string) {
+    const user = await db
+      .select({ id: userTable.id, fullName: userTable.fullName, email: userTable.email })
+      .from(userTable)
+      .where(eq(userTable.id, id));
+
+    if (!user || user.length === 0 || !user[0]) {
+      throw new Error("User not found");
+    }
+
+    return user[0];
+  }
+
+  public async verifyAndDecodeToken(token: string) {
+    try {
+      const result = JWT.verify(token, env.JWT_SECRET) as GenerateUserTokenPayloadType;
+      return result;
+    } catch (error) {
+      throw new Error("Invalid or expired token");
+    }
+  }
 }
