@@ -1,1 +1,1 @@
-export * from "./models/user";
+export * from "@repo/database/models/user";

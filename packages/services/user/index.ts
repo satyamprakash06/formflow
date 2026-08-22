@@ -7,9 +7,11 @@ import { env } from "../env";
 
 import {
   createUserWithEmailAndPassword,
-  CreateUserWithEmailAndPasswordType,
+  type CreateUserWithEmailAndPasswordType,
   generateUserTokenPayload,
-  GenerateUserTokenPayloadType,
+  type GenerateUserTokenPayloadType,
+  signInUserWithEmailAndPassword,
+  type SignInUserWithEmailAndPasswordType,
 } from "./model";
 
 export default class UserService {
@@ -58,6 +60,30 @@ export default class UserService {
 
     return {
       id: result[0]?.id,
+      token,
+    };
+  }
+
+  public async signInUserWithEmailAndPassword(payload: SignInUserWithEmailAndPasswordType) {
+    const { email, password } = await signInUserWithEmailAndPassword.parseAsync(payload);
+
+    const existingUser = await this.getUserByEmail(email);
+    if (!existingUser) {
+      throw new Error("User with this Email does not exist");
+    }
+    if (!existingUser.passwordHash) {
+      throw new Error("Invalid authentication method, please use another method to sign in");
+    }
+    const isPasswordValid = await bcrypt.compare(password, existingUser.passwordHash);
+    if (!isPasswordValid) {
+      throw new Error("Invalid email or password");
+    }
+
+    // Generate a token for the signed-in user
+    const { token } = await this.generateUserToken({ id: existingUser.id });
+
+    return {
+      id: existingUser.id,
       token,
     };
   }
