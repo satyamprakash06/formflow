@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { fieldOutputModel } from "../form-field/model";
 
 export const createFormInputModel = z.object({
   title: z.string().min(1).max(255).describe("Title is required"),
@@ -20,3 +21,16 @@ export const listFormOutputModel = z.array(
     updatedAt: z.date().nullable().describe("Last updated timestamp of the form"),
   }),
 );
+
+export const getFormInputModel = z.object({
+  formId: z.uuid().describe("UUID of the form to retrieve"),
+});
+
+export const getFormOutputModel = z.object({
+  id: z.string().describe("ID of the form"),
+  title: z.string().describe("Title of the form"),
+  description: z.string().nullable().describe("Description of the form"),
+  createdAt: z.string().nullable().describe("Timestamp of when the form was created"),
+  updatedAt: z.string().nullable().describe("Last updated timestamp of the form"),
+  fields: z.array(fieldOutputModel).describe("Array of fields associated with the form"),
+});

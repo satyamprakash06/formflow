@@ -29,7 +29,7 @@ export const getFieldInputModel = z.object({
   formId: z.uuid().describe("The ID of the form field to retrieve"),
 });
 
-export const FieldOutputModel = z.object({
+export const fieldOutputModel = z.object({
   id: z.string(),
   label: z.string(),
   description: z.string().nullable(),
@@ -43,7 +43,7 @@ export const FieldOutputModel = z.object({
   updatedAt: z.string().nullable(),
 });
 
-export const getFieldOutputModel = z.array(FieldOutputModel);
+export const getFieldOutputModel = z.array(fieldOutputModel);
 
 export type CreateFieldInputModel = z.infer<typeof createFieldInputModel>;
 export type CreateFieldOutputModel = z.infer<typeof createFieldOutputModel>;

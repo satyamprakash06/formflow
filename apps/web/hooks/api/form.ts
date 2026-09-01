@@ -49,3 +49,22 @@ export const useListForms = () => {
     status,
   };
 };
+
+export const useGetFormWithFields = (formId: string) => {
+  const {
+    data: form,
+    error,
+    isFetching,
+    isFetched,
+    isLoading,
+    status,
+  } = trpc.form.getFormWithFields.useQuery({ formId });
+  return {
+    form,
+    error,
+    isFetching,
+    isFetched,
+    isLoading,
+    status,
+  };
+};
